@@ -131,15 +131,13 @@ signupForm.addEventListener("submit", async (e) => {
     return;
   }
 
-  if (data.user && !data.session) {
-    signupMsg.className = "msg ok";
-    signupMsg.textContent = "Compte créé. Vérifiez votre email pour confirmer avant de vous connecter.";
-    signupForm.reset();
-    return;
-  }
-
   signupForm.reset();
-  enterApp(data.user);
+  if (data.session) {
+    enterApp(data.user);
+  } else {
+    const loginRes = await supabaseClient.auth.signInWithPassword({ email, password });
+    if (loginRes.data.user) enterApp(loginRes.data.user);
+  }
 });
 
 loginForm.addEventListener("submit", async (e) => {
