@@ -89,7 +89,7 @@ async function loadEntries() {
 async function enterApp(user) {
   authView.hidden = true;
   appView.hidden = false;
-  whoName.textContent = user.user_metadata?.username || user.email;
+  whoName.textContent = user.email;
   await loadEntries();
 }
 
@@ -110,20 +110,20 @@ supabaseClient.auth.onAuthStateChange((event, session) => {
 
 signupForm.addEventListener("submit", async (e) => {
   e.preventDefault();
-  const username = document.getElementById("suUser").value.trim();
   const email = document.getElementById("suMail").value.trim();
+  const phone = document.getElementById("suPhone").value.trim();
   const password = document.getElementById("suPass").value;
   signupMsg.textContent = "";
 
-  if (!username || !email || !password) {
-    signupMsg.textContent = "Remplissez les trois champs.";
+  if (!email || !password) {
+    signupMsg.textContent = "Remplissez au moins email et mot de passe.";
     return;
   }
 
   const { data, error } = await supabaseClient.auth.signUp({
     email,
     password,
-    options: { data: { username } }
+    options: { data: { phone } }
   });
 
   if (error) {
